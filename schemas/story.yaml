@@ -1,0 +1,81 @@
+# World Engine — story-side types.
+#
+# Chapters, books and story threads. The thread tracker itself (§16) is Phase 2;
+# what is here is the schema, so threads written now validate and are indexed
+# from the day the tracker arrives rather than needing a migration.
+
+book:
+  extends: entity
+  folder: Story/Books
+  version: 1
+  additionalProperties: true
+  properties:
+    status:
+      type: enum
+      values: [planned, drafting, revising, complete]
+      default: planned
+    word_target:
+      type: integer
+      min: 0
+
+chapter:
+  extends: entity
+  folder: Story/Chapters
+  version: 1
+  additionalProperties: true
+  required:
+    - status
+  properties:
+    number:
+      type: number
+    status:
+      type: enum
+      values: [outline, draft, revised, final]
+      default: draft
+    pov:
+      type: link
+    word_count:
+      type: integer
+      min: 0
+  relationships:
+    part_of:
+      target: book
+      inverse: contains
+      cardinality: one
+    pov:
+      target: character
+    features:
+      target: character
+      inverse: appears_in
+
+story_thread:
+  extends: entity
+  folder: Story/Threads
+  description: An unresolved narrative element. Open until something closes it.
+  version: 1
+  additionalProperties: true
+  required:
+    - status
+  properties:
+    status:
+      type: enum
+      values: [open, resolved, abandoned]
+      default: open
+    priority:
+      type: enum
+      values: [low, medium, high]
+    introduced:
+      type: link
+    last_referenced:
+      type: link
+    resolved_in:
+      type: link
+  relationships:
+    introduced:
+      target: chapter
+    last_referenced:
+      target: chapter
+    resolved_in:
+      target: chapter
+    concerns:
+      target: character

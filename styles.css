@@ -1,0 +1,327 @@
+/* World Engine. Every colour is an Obsidian theme variable -- §32 asks the
+   plugin to respect themes, and a hardcoded hex is the one thing that cannot. */
+
+.world-engine {
+	padding: 0 0 2rem;
+	font-size: var(--font-ui-small);
+}
+
+.world-engine .we-header {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--background-modifier-border);
+	position: sticky;
+	top: 0;
+	background: var(--background-primary);
+	z-index: 1;
+}
+
+.world-engine .we-title {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-weight: 600;
+	font-size: var(--font-ui-medium);
+}
+
+.world-engine .we-title-icon {
+	display: flex;
+	color: var(--text-accent);
+}
+
+.world-engine .we-header-meta,
+.world-engine .we-muted {
+	color: var(--text-muted);
+}
+
+.world-engine .we-actions {
+	margin-left: auto;
+	display: flex;
+	gap: 0.4rem;
+	flex-wrap: wrap;
+}
+
+.world-engine .we-tabs {
+	display: flex;
+	gap: 0.25rem;
+	padding: 0.5rem 1rem 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.world-engine .we-tab {
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	padding: 0.35rem 0.6rem;
+	color: var(--text-muted);
+	box-shadow: none;
+	cursor: pointer;
+}
+
+.world-engine .we-tab.is-active {
+	color: var(--text-normal);
+	border-bottom-color: var(--text-accent);
+}
+
+.world-engine .we-body {
+	padding: 0 1rem;
+}
+
+.world-engine .we-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 0.6rem;
+	margin: 1rem 0;
+}
+
+.world-engine .we-card {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	padding: 0.6rem 0.75rem;
+	background: var(--background-secondary);
+}
+
+.world-engine .we-card-label {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.world-engine .we-card-value {
+	font-size: 1.6em;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.world-engine .we-card-detail {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+}
+
+.world-engine .we-section {
+	margin: 1.5rem 0 0.5rem;
+	font-size: var(--font-ui-medium);
+}
+
+.world-engine .we-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.world-engine .we-table td {
+	padding: 0.2rem 0.5rem 0.2rem 0;
+	vertical-align: top;
+	border: none;
+}
+
+.world-engine .we-bar {
+	font-family: var(--font-monospace);
+	letter-spacing: -0.05em;
+	color: var(--text-accent);
+	white-space: nowrap;
+	width: 1%;
+}
+
+.world-engine .we-num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	width: 1%;
+	white-space: nowrap;
+}
+
+.world-engine .we-detail {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+}
+
+.world-engine .we-dim {
+	white-space: nowrap;
+}
+
+.world-engine .we-controls {
+	display: flex;
+	gap: 0.4rem;
+	flex-wrap: wrap;
+	margin: 0.75rem 0;
+}
+
+.world-engine .we-controls input[type="search"] {
+	flex: 1 1 12rem;
+}
+
+.world-engine .we-count {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	margin: 0.25rem 0;
+}
+
+.world-engine .we-group {
+	margin-bottom: 0.75rem;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	overflow: hidden;
+}
+
+.world-engine .we-group-head {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.6rem;
+	background: var(--background-secondary);
+	font-weight: 600;
+	word-break: break-all;
+}
+
+.world-engine .we-issue {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	padding: 0.3rem 0.6rem;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.world-engine .we-sev {
+	font-size: var(--font-ui-smaller);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	width: 4.5em;
+	flex: none;
+}
+
+.world-engine .we-error .we-sev {
+	color: var(--text-error);
+}
+
+.world-engine .we-warning .we-sev {
+	color: var(--text-warning);
+}
+
+.world-engine .we-info .we-sev {
+	color: var(--text-muted);
+}
+
+.world-engine .we-code {
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}
+
+.world-engine .we-msg {
+	flex: 1 1 12rem;
+}
+
+.world-engine .we-hint {
+	flex-basis: 100%;
+	padding-left: 5em;
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+}
+
+.world-engine .we-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.world-engine .we-list li,
+.world-engine .we-entity {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.world-engine .we-entity-name {
+	flex: 1 1 auto;
+}
+
+.world-engine .we-pill {
+	font-size: var(--font-ui-smaller);
+	padding: 0 0.4em;
+	border-radius: var(--radius-s);
+	background: var(--background-modifier-border);
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.world-engine .we-canon-canon {
+	background: var(--color-green);
+	color: var(--text-on-accent);
+}
+
+.world-engine .we-canon-provisional,
+.world-engine .we-canon-draft {
+	background: var(--color-yellow);
+	color: var(--text-on-accent);
+}
+
+.world-engine .we-canon-retired,
+.world-engine .we-canon-non-canon {
+	background: var(--color-red);
+	color: var(--text-on-accent);
+}
+
+.world-engine .we-clickable {
+	cursor: pointer;
+}
+
+.world-engine .we-clickable:hover {
+	background: var(--background-modifier-hover);
+}
+
+.world-engine .we-empty {
+	color: var(--text-muted);
+	padding: 0.5rem 0;
+}
+
+.world-engine .we-schema {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	margin-bottom: 0.75rem;
+	overflow: hidden;
+}
+
+.world-engine .we-schema-head {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.6rem;
+	background: var(--background-secondary);
+}
+
+.world-engine .we-schema .we-table {
+	padding: 0.4rem 0.6rem;
+}
+
+.world-engine .we-overall {
+	text-align: center;
+	padding: 1rem;
+}
+
+.world-engine .we-overall-value {
+	font-size: 2.6em;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--text-accent);
+}
+
+.world-engine .we-overall-detail {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	margin-top: 0.3rem;
+}
+
+.we-status {
+	cursor: pointer;
+}
+
+.we-hidden {
+	display: none;
+}

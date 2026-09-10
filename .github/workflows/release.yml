@@ -1,0 +1,69 @@
+name: Release
+
+# Push a tag equal to manifest.json's version, with no leading v (`git tag 1.2.3 && git push --tags`).
+# The workflow builds and tests that commit, then publishes a release carrying the files Obsidian installs.
+on:
+  push:
+    tags: ["[0-9]*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, exactly as in manifest.json (e.g. 1.2.3)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22.x"
+          cache: npm
+
+      # Obsidian's installer fetches the release whose tag equals manifest.json's version, so all four must agree.
+      - name: Work out which version this is
+        id: pick
+        env:
+          DISPATCHED: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          version="${DISPATCHED:-$GITHUB_REF_NAME}"
+          manifest="$(node -p "require('./manifest.json').version")"
+          package="$(node -p "require('./package.json').version")"
+          listed="$(node -p "require('./versions.json')[process.argv[1]] || ''" "$version")"
+          [ "$version" = "$manifest" ] || { echo "::error::tag says $version, manifest.json says $manifest"; exit 1; }
+          [ "$version" = "$package" ] || { echo "::error::tag says $version, package.json says $package"; exit 1; }
+          [ -n "$listed" ] || { echo "::error::versions.json has no entry for $version"; exit 1; }
+          packaging/release-notes.sh "$version" > /dev/null
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and test the tagged commit
+        run: make check
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.pick.outputs.version }}
+        run: |
+          set -euo pipefail
+          packaging/release-notes.sh "$VERSION" > notes.md
+          assets=(main.js manifest.json)
+          if [ -f styles.css ]; then assets+=(styles.css); fi
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "$VERSION exists: updating its notes and files"
+            gh release edit "$VERSION" --title "World Engine $VERSION" --notes-file notes.md
+            gh release upload "$VERSION" "${assets[@]}" --clobber
+          else
+            gh release create "$VERSION" --target "$GITHUB_SHA" \
+              --title "World Engine $VERSION" --notes-file notes.md "${assets[@]}"
+          fi

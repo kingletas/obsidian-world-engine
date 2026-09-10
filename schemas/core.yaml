@@ -1,0 +1,184 @@
+# World Engine — core entity types.
+#
+# Every schema here is a plain YAML mapping of `TypeName: definition`. Edit it,
+# commit it, delete it: nothing in this file is generated, and the plugin reads
+# it fresh on every "Reload schemas".
+#
+# `additionalProperties: true` is set on all of them on purpose. These schemas
+# arrive in a vault that already has notes in it, and a schema that flagged every
+# undeclared property would light up the whole folder on the day it was created.
+# Set it to false on a type once that type is actually under control.
+
+entity:
+  description: Shared base for every world entity. Not used directly.
+  version: 1
+  additionalProperties: true
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      description: Display name. Falls back to the filename when absent.
+    id:
+      type: string
+      description: Stable identifier, unique across the vault.
+      pattern: "[a-z0-9][a-z0-9-]*"
+    canon_status:
+      type: enum
+      values: [idea, draft, provisional, canon, retired, non-canon]
+      default: draft
+    tags:
+      type: list
+      items: string
+    summary:
+      type: string
+
+character:
+  extends: entity
+  folder: Characters
+  description: A person, creature or intelligence that acts in the story.
+  version: 1
+  additionalProperties: true
+  required:
+    - status
+  properties:
+    status:
+      type: enum
+      values: [alive, dead, unknown]
+      default: alive
+    species:
+      type: string
+    age:
+      type: number
+      min: 0
+    born:
+      type: date
+    died:
+      type: date
+    faction:
+      type: link
+  relationships:
+    knows:
+      target: character
+      inverse: knows
+      description: Symmetric acquaintance.
+    parent_of:
+      target: character
+      inverse: child_of
+    child_of:
+      target: character
+      inverse: parent_of
+    member_of:
+      target: faction
+      inverse: has_member
+    possesses:
+      target: item
+      inverse: possessed_by
+    located_at:
+      target: location
+      inverse: houses
+      cardinality: one
+
+location:
+  extends: entity
+  folder: Locations
+  description: A place. Anything from a room to a continent.
+  version: 1
+  additionalProperties: true
+  properties:
+    region:
+      type: string
+    population:
+      type: integer
+      min: 0
+  relationships:
+    part_of:
+      target: location
+      inverse: contains
+      cardinality: one
+    contains:
+      target: location
+      inverse: part_of
+    houses:
+      target: character
+      inverse: located_at
+
+faction:
+  extends: entity
+  folder: Factions
+  description: An organisation, house, order or cult.
+  version: 1
+  additionalProperties: true
+  properties:
+    founded:
+      type: date
+    status:
+      type: enum
+      values: [active, dormant, destroyed, unknown]
+  relationships:
+    has_member:
+      target: character
+      inverse: member_of
+    allied_with:
+      target: faction
+      inverse: allied_with
+    at_war_with:
+      target: faction
+      inverse: at_war_with
+    based_at:
+      target: location
+      cardinality: one
+
+item:
+  extends: entity
+  folder: Items
+  description: An object with a history worth tracking.
+  version: 1
+  additionalProperties: true
+  properties:
+    rarity:
+      type: string
+  relationships:
+    possessed_by:
+      target: character
+      inverse: possesses
+      cardinality: one
+    created_by:
+      target: character
+    kept_at:
+      target: location
+      cardinality: one
+
+event:
+  extends: entity
+  folder: Events
+  description: Something that happened at a point or range in time.
+  version: 1
+  additionalProperties: true
+  required:
+    - date
+  properties:
+    date:
+      type: date
+      description: Start of the event. `YYYY-MM-DD`, `YYYY-MM` or a bare year.
+    end_date:
+      type: date
+    participants:
+      type: links
+    location:
+      type: link
+  relationships:
+    participants:
+      target: character
+      inverse: participated_in
+    location:
+      target: location
+    occurred_before:
+      target: event
+      inverse: occurred_after
+    occurred_after:
+      target: event
+      inverse: occurred_before
+    caused_by:
+      target: event
+      inverse: caused

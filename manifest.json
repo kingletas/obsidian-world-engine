@@ -1,0 +1,10 @@
+{
+	"id": "world-engine",
+	"name": "World Engine",
+	"version": "0.3.0",
+	"minAppVersion": "1.5.0",
+	"description": "A schema, validation and continuity layer for a structured vault. Markdown and YAML stay the source of truth; the index is a rebuildable cache.",
+	"author": "Luis Tineo",
+	"authorUrl": "https://github.com/kingletas/obsidian-world-engine",
+	"isDesktopOnly": false
+}
